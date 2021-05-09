@@ -54,15 +54,21 @@ def train_pipeline(training_params):
     else:
         raise NotImplementedError()
 
-    logger.info("fit model...")
-    model.fit(X_train[train_features], X_train['target'])
+    if training_params.fit_model:
+        logger.info("fit model...")
+        model.fit(X_train[train_features], X_train['target'])
 
     # 5. save model 
-    if training_params.serialize_model == True:
+    if training_params.serialize_model:
+        logger.info("serialize model...")
         with open(training_params.output_model_path, "wb") as f:
             pickle.dump(model, f)
 
     # 4. validate
+    logger.info("load model & validate")
+    with open(training_params.output_model_path, "rb") as f:
+        model = pickle.load(f)
+
     if len(X_val) == 0:
         val_preds = None
     else:
@@ -74,13 +80,17 @@ def train_pipeline(training_params):
                 is not None else np.NaN
     logger.info(f'ROC AUC train: {train_score:.5f} val: {val_score:.5f}')
 
-    return model, transformer, train_features
+    return transformer, train_features
 
 
 def predict_new_data(
-    predict_raw_data_path, predict_out_data_path, 
-    model, transformer, train_features
+    predict_raw_data_path, model_path, predict_out_data_path, 
+    transformer, train_features
     ):
+
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+
     X_test = read_data(predict_raw_data_path)
     X_test = transformer.transform(X_test)
     
@@ -99,12 +109,12 @@ def main(cfg):
 
     logger.info(OmegaConf.to_yaml(cfg))
 
-    model, transformer, train_features = train_pipeline(cfg)
+    transformer, train_features = train_pipeline(cfg)
     
     if cfg.predict_raw_data_path is not None:
-        result = predict_new_data(
-            cfg.predict_raw_data_path, cfg.predict_out_data_path, 
-            model, transformer, train_features
+        predict_new_data(
+            cfg.predict_raw_data_path, cfg.output_model_path, cfg.predict_out_data_path, 
+            transformer, train_features
         )
 
 

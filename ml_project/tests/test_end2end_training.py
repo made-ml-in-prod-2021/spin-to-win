@@ -16,6 +16,7 @@ def test_train_e2e(tmpdir, dataset_path, caplog):
     expected_metric_path = tmpdir.join("metrics.json")
     
     params = {
+        'fit_model': True, 
         'input_data_path': 'data/raw/heart.csv', 
         'serialize_model': True, 
         'output_model_path': 'models/model.pkl', 
@@ -46,7 +47,7 @@ def test_train_e2e(tmpdir, dataset_path, caplog):
     
     if cfg.predict_raw_data_path is not None:
         result = predict_new_data(
-            cfg.predict_raw_data_path, cfg.predict_out_data_path, 
+            cfg.predict_raw_data_path, cfg.output_model_path, cfg.predict_out_data_path, 
             model, transformer, train_features
         )
     

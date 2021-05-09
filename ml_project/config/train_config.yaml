@@ -4,6 +4,7 @@ defaults:
   - hydra/job_logging: custom
   - general: general
  
+fit_model: True
 input_data_path: "data/raw/heart.csv"
 serialize_model: True
 output_model_path: "models/model.pkl"
