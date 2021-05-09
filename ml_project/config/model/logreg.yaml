@@ -1,0 +1,9 @@
+# @package _group_
+name: lr
+train_params:
+  train_features: default
+  model_params: 
+    random_state: ${general.random_state}
+
+
+
