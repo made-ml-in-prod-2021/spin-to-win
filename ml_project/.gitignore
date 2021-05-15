@@ -1,4 +1,9 @@
-ml_project_example-main*
+# hydra outputs (logs and configs)
+./outputs 
+
+./notebooks/experiments/*
+./models
+./data
 
  Byte-compiled / optimized / DLL files
 .venv/

@@ -65,7 +65,7 @@ def train_pipeline(training_params):
             pickle.dump(model, f)
 
     # 4. validate
-    logger.info("load model & validate")
+    logger.info("load model & validat")
     with open(training_params.output_model_path, "rb") as f:
         model = pickle.load(f)
 
