@@ -1,7 +1,7 @@
 # hydra outputs (logs and configs)
 ml_project/outputs/*
 
-ml_project/notebooks/experiments/
+ml_project/notebooks/experiments/*
 
 ml_project_example-main*
 
@@ -99,3 +99,5 @@ target/
 # Mypy cache
 .mypy_cache/
 
+# pytest cache
+.pytest_cache
