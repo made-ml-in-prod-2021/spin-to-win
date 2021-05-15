@@ -19,6 +19,7 @@ setup(
         "pytest==6.1.2",
         "pytest-cov==2.10.1",
         "tox==3.23.1",
+        "Faker==8.1.4",
     ],
     license="MIT",
 )

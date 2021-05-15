@@ -1,4 +1,4 @@
-from heart_disease_source_code.data.make_dataset import read_data, split_train_val_data
+from src.data.make_dataset import read_data, split_train_val_data
 from omegaconf import OmegaConf
 import pytest
 
