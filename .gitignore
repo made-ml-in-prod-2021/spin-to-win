@@ -1,9 +1,7 @@
 # hydra outputs (logs and configs)
-ml_project/outputs 
+ml_project/outputs/*
 
-ml_project/notebooks/experiments
-ml_project/models
-ml_project/data
+ml_project/notebooks/experiments/
 
 ml_project_example-main*
 
