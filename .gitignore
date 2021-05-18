@@ -1,7 +1,8 @@
-# hydra outputs (logs and configs)
+# hydra outputs - logs and configs
 ml_project/outputs/*
 
 ml_project/notebooks/experiments/*
+ml_project/notebooks/*.ipynb
 
 ml_project_example-main*
 

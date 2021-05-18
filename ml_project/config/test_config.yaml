@@ -1,0 +1,9 @@
+defaults:
+  - hydra/hydra_logging: default
+  - hydra/job_logging: custom
+  - general: general
+ 
+model_path: "models/baseline_model_v1/"
+
+predict_raw_data_path: "data/raw/example_for_predict.csv"
+predict_out_data_path: "data/output/example_predicts.csv"

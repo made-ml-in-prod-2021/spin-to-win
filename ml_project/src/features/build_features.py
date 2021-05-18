@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+pd.options.mode.chained_assignment = None
 from pandas.api.types import CategoricalDtype
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -12,7 +13,7 @@ USE_COLUMNS = [
     'restecg','sex','slope','target','thal','thalach','trestbps'
 ]
 
-class PreprocessRawData(TransformerMixin):
+class RawDataPreprocessor(TransformerMixin):
 
     def __init__(self):
         pass

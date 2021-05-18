@@ -4,17 +4,15 @@ import click
 import hydra
 from omegaconf import OmegaConf
 import pandas as pd
+pd.options.mode.chained_assignment = None
+
 import pickle
 import logging
-from pprint import pprint
 
 from src.data import read_data, split_train_val_data
-from src.features.build_features import PreprocessRawData
+from src.features.build_features import RawDataPreprocessor
 from src.features.select_features import select_features
 from src.models.save_and_load_models import serialize_model, load_model
-
-import warnings
-warnings.filterwarnings("ignore")
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
@@ -38,7 +36,7 @@ def train_pipeline(cfg):
 
     # 3. preprocess data
     logger.info("preprocess data...")
-    transformer = PreprocessRawData()
+    transformer = RawDataPreprocessor()
     X_train = transformer.fit_transform(X_train)
     X_val = transformer.transform(X_val)
 
@@ -79,27 +77,6 @@ def train_pipeline(cfg):
 
     logger.info(f'ROC AUC train: {train_score:.5f} val: {val_score:.5f}')
 
-    return transformer, selected_features
-
-
-def predict_new_data(
-    predict_raw_data_path, model_path, predict_out_data_path, 
-    transformer, selected_features
-    ):
-    assert os.path.exists(model_path)
-
-    logger.info("load model for predict")
-    model, transformer, selected_features = load_model(model_path)
-
-    X_test = read_data(predict_raw_data_path)
-    X_test = transformer.transform(X_test)
-    
-    logger.info("predict probabilities")
-    test_preds = model.predict_proba(X_test[selected_features])[:, 1]
-    test_preds_df = pd.DataFrame(data=test_preds, columns=['preds'])
-    logger.info("save predicts to csv")
-    test_preds_df.to_csv(predict_out_data_path, index=False)
-
 
 @hydra.main(config_path='../config', config_name='train_config')
 def main(cfg):
@@ -107,18 +84,9 @@ def main(cfg):
     # hydra doesn't work with relative paths
     cfg.input_data_path = hydra.utils.to_absolute_path(cfg.input_data_path)
     cfg.model_path = hydra.utils.to_absolute_path(cfg.model_path)
-    cfg.predict_raw_data_path = hydra.utils.to_absolute_path(cfg.predict_raw_data_path)
-    cfg.predict_out_data_path = hydra.utils.to_absolute_path(cfg.predict_out_data_path)
-
-    transformer, selected_features = train_pipeline(cfg)
     
-    if cfg.predict_raw_data_path is not None:
-        predict_new_data(
-            cfg.predict_raw_data_path, cfg.model_path, cfg.predict_out_data_path, 
-            transformer, selected_features
-        )
-
-
+    train_pipeline(cfg)
+    
 if __name__ == "__main__":
     main()
 
