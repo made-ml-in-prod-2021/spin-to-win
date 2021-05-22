@@ -30,7 +30,9 @@ http://localhost:8000/docs
 ```
 
 Тесты
-```pytest -v```
+```
+pytest -v
+```
 
 
 
