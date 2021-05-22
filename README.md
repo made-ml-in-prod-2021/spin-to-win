@@ -13,7 +13,7 @@ pip install -e  .
 python heart_disease_source_code/train.py
 ```
 
-Дефолтный конфиг (через facebookresearch/hydra):
+Дефолтный конфиг (реализовано на facebookresearch/__hydra__):
 ```
 ml_example/config/train_config.yaml
 ```

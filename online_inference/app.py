@@ -1,28 +1,33 @@
 import sys
 import os
+import uuid
+import logging
+import uvicorn
 import pandas as pd
 from fastapi import FastAPI
-import logging
 
 from src.models.save_and_load_models import load_model
+from src.entities.data_validation import HeartDiseaseResponse, HeartDiseaseRequest
+from src.setup_logger import setup_logger
 
-logger = logging.getLogger(__name__)
+logger = setup_logger(__name__) # logging.getLogger(__name__)
 
 app = FastAPI()
 
-transformer, classifier, train_features = None, None, None
+classifier, transformer, train_features = None, None, None
+
 
 @app.on_event("startup")
 def load_model_startup():
     """ Load baseline model """
-    global transformer, classifier, train_features
+    global classifier, transformer, train_features
 
     model_path = os.getenv("PATH_TO_MODEL") or './models/baseline_model_v1'
     try:
-        transformer, classifier, train_features = load_model(model_path)
+        classifier, transformer, train_features = load_model(model_path)
     except FileNotFoundError as e:
+        classifier, transformer, train_features = None, None, None
         logger.error(e)
-        transformer, classifier, train_features = None, None, None
         raise RuntimeError(e)
 
 
@@ -37,6 +42,22 @@ async def root():
     return {"Hello": "world"}
 
 
+@app.api_route("/predict", response_model=HeartDiseaseResponse, methods=["POST"])
+def predict(data: HeartDiseaseRequest) -> HeartDiseaseResponse:
+
+    if not healthcheck():
+        raise HTTPException(status_code=500, detail="healthcheck: False")
+
+    sample_uuid = data.uuid if 'uuid' in data else uuid.uuid4()
+    df = pd.DataFrame.from_dict([data.dict()])
+    data_processed = transformer.transform(df)
+    proba = classifier.predict_proba(data_processed[train_features])[:, 1]
+
+    return HeartDiseaseResponse(uuid=sample_uuid, proba=proba) 
+
+
+# if __name__ == "__main__":
+#     uvicorn.run("app:app", host="0.0.0.0", port=os.getenv("PORT", 8001))
 
 
 

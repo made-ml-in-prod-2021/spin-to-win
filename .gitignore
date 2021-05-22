@@ -6,7 +6,10 @@ ml_project/notebooks/*.ipynb
 
 ml_project_example-main*
 
- Byte-compiled / optimized / DLL files
+online_inference/notebooks/*.ipynb
+online_inference/logfiles/*.log
+ 
+Byte-compiled / optimized / DLL files
 .venv/
 __pycache__/
 *.py[cod]
