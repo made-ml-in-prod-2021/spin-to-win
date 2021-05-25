@@ -1,0 +1,16 @@
+defaults:
+  - model: forest
+  - hydra/hydra_logging: default
+  - hydra/job_logging: custom
+  - general: general
+ 
+fit_model: True
+input_data_path: "data/raw/heart.csv"
+
+splitting_strategy: "holdout"
+splitting_params:
+  val_size: 0.1
+  random_state: 3
+
+serialize_model: True
+model_path: "models/baseline_model_v1/"

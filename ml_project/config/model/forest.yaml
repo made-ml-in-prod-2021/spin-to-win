@@ -1,0 +1,10 @@
+# @package _group_
+name: rf
+train_params:
+  selected_features: default
+  model_params:
+    n_estimators: 120
+    random_state: ${general.random_state}
+    max_depth: 
+
+
