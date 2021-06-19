@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 pd.options.mode.chained_assignment = None
+
 from pandas.api.types import CategoricalDtype
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -8,9 +9,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.base import TransformerMixin
 
-USE_COLUMNS = [
+FEATURES = [
     'age','ca','chol','cp','exang','fbs','oldpeak',
-    'restecg','sex','slope','target','thal','thalach','trestbps'
+    'restecg','sex','slope','thal','thalach','trestbps'
 ]
 
 class RawDataPreprocessor(TransformerMixin):
@@ -38,7 +39,7 @@ class RawDataPreprocessor(TransformerMixin):
     def check_raw_data(df: pd.DataFrame) -> pd.DataFrame:
         """ Кидаем ошибку, если в Raw Data нет нужных колонок """
 
-        expected_cols = set(USE_COLUMNS)
+        expected_cols = set(FEATURES)
         input_cols = set(df.columns)
 
         assert all([i in input_cols for i in expected_cols]), (
@@ -51,7 +52,10 @@ class RawDataPreprocessor(TransformerMixin):
     @staticmethod
     def select_needed_columns(df: pd.DataFrame) -> pd.DataFrame:
         """ Взять только нужные колонки """
-        return df[USE_COLUMNS]
+        if 'target' in df:
+            return df[FEATURES + ['target']]
+        else:
+            return df[FEATURES]
 
     
     @staticmethod
