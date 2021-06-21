@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: online-inference
+  labels:
+    app: online-inference
+spec:
+  containers: 
+    - image: spintowin/heart-dis:v1
+      name: heart-dis
+      ports:
+        - containerPort: 8000

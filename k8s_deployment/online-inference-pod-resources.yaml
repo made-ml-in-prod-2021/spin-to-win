@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: online-inference-pod-resources
+  labels:
+    app: online-inference-pod-resources
+spec:
+  containers: 
+    - image: spintowin/heart-dis:v1
+      name: heart-dis
+      ports:
+        - containerPort: 8000
+      resources: 
+        requests: 
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
